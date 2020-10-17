@@ -19,6 +19,7 @@ public class ArraysRandomIndex {
 		for(int i=0; i<10; i++) {
 			
 			do {
+			 repeat = false;
 			 index[i] = (int)(Math.random()*10);
 			 for(int j=0; j<i; j++) 
 			 {
@@ -29,8 +30,6 @@ public class ArraysRandomIndex {
 			 }
 		    } while(repeat);
 			
-			repeat = false;
-			System.out.println(index[i]);
 			copy[index[i]] = array[i];
 		}
 		
