@@ -10,7 +10,7 @@ public class Circle {
 	  radius = newRadius;
   }
   public double getArea(){
-	  return radius*radius*Math.PI;
+	  return (int)(100*radius*radius*Math.PI)/100.0;
   }
   
   public double getPerimeter(){
