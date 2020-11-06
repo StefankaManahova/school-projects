@@ -1,17 +1,16 @@
 package edu.objects;
 
 public class Student {
+	public String name;
+	public double averageScore;
 	
-  public String name;
-  public int facno;
-  
-  public Student(String aName, int aFacno){
-	  name = aName;
-	  facno = aFacno;
-  }
-  public String toString(){
-	  String res ="";
-	  res = "Student: faculty number " + facno + ", name " + name;
-	  return res;
-  }
+	Student(){
+		
+	}
+	
+	Student (String name, double averageScore){
+		this.name = name;
+		this.averageScore = averageScore;
+	}
+	
 }
