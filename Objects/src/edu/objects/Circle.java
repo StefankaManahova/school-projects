@@ -1,7 +1,7 @@
 package edu.objects;
 
 public class Circle {
-  double radius = 1;
+  private double radius = 1;
   
   Circle(){	  
   }
@@ -18,6 +18,9 @@ public class Circle {
   }
   void setRadius(double newRadius){
 	  radius = newRadius;
+  }
+  public double getRadius() {
+	  return radius;
   }
   
 }
