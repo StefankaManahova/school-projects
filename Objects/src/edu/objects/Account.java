@@ -44,11 +44,13 @@ public class Account {
 	  return (int)(balance*getMonthlyInterestRate())/100.0;
 	  
   }
-  public void withdraw(int sumToWithdraw) {
+  public void withdraw(double sumToWithdraw) {
+	  sumToWithdraw = (int)(sumToWithdraw*100)/100.0;
 	  balance -= sumToWithdraw;
 	  System.out.println("Successful withdraw of $"+sumToWithdraw);
   }
-  public void deposit(int sumToDeposit) {
+  public void deposit(double sumToDeposit) {
+	  sumToDeposit = (int)(sumToDeposit*100)/100.0;
 	  balance += sumToDeposit;
 	  System.out.println("Successful deposit of $"+sumToDeposit);
   }
