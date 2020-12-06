@@ -8,7 +8,7 @@ public class Time {
 	Time(){
 		
 		long milliseconds = System.currentTimeMillis();
-		this.hour = (int)((milliseconds/3_600_000)%24);
+		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
 		milliseconds %= 3_600_000;
 		this.minute = (int)(milliseconds/60_000);
 		milliseconds %= 60_000;
@@ -30,7 +30,7 @@ public class Time {
 	}
 	
 	Time (long milliseconds){
-		this.hour = (int)((milliseconds/3_600_000)%24);
+		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
 		milliseconds %= 3_600_000;
 		this.minute = (int)(milliseconds/60_000);
 		milliseconds %= 60_000;
@@ -50,7 +50,7 @@ public class Time {
 		return hour;
 	}
 	public void setTime(long milliseconds) {
-		this.hour = (int)((milliseconds/3_600_000)%24);
+		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
 		milliseconds %= 3_600_000;
 		this.minute = (int)(milliseconds/60_000);
 		milliseconds %= 60_000;
