@@ -142,7 +142,7 @@ public class MyInteger {
 			 break;
 			case '9':result += 9*Math.pow(10, power);
 			 break;
-			case '0':result += 0*Math.pow(10, power);
+			case '0':result += 0;
 			 break;
 			default: notInteger= true;
 			 break;
@@ -184,7 +184,7 @@ public class MyInteger {
 			 break;
 			case '9':result += 9*Math.pow(10, power);
 			 break;
-			case '0':result += 0*Math.pow(10, power);
+			case '0':result += 0;
 			 break;
 			default: notInteger= true;
 			 break;

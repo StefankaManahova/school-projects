@@ -6,13 +6,14 @@ public class Time {
 	private int second;
 	
 	Time(){
-		
 		long milliseconds = System.currentTimeMillis();
-		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
-		milliseconds %= 3_600_000;
-		this.minute = (int)(milliseconds/60_000);
-		milliseconds %= 60_000;
-		this.second =(int)(milliseconds/1000);		
+		this.setTime(milliseconds);
+		
+//		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
+//		milliseconds %= 3_600_000;
+//		this.minute = (int)(milliseconds/60_000);
+//		milliseconds %= 60_000;
+//		this.second =(int)(milliseconds/1000);		
 		
 	}
 	
@@ -30,11 +31,12 @@ public class Time {
 	}
 	
 	Time (long milliseconds){
-		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
-		milliseconds %= 3_600_000;
-		this.minute = (int)(milliseconds/60_000);
-		milliseconds %= 60_000;
-		this.second =(int)(milliseconds/1000);	
+//		this.hour = (int)((milliseconds/3_600_000 + 2)%24);
+//		milliseconds %= 3_600_000;
+//		this.minute = (int)(milliseconds/60_000);
+//		milliseconds %= 60_000;
+//		this.second =(int)(milliseconds/1000);	
+		this.setTime(milliseconds);
 	}
 	
 

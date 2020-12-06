@@ -51,9 +51,10 @@ public class ATM {
 			System.out.println("Enter an amount to withdraw (written with \".\" instead of \",\"):");
 			input= sc.nextLine();
 			int l = input.length();
+			boolean floatingPointFound = false;
 			
 			for(int i=0; i<l; i++) {
-				boolean floatingPointFound = false;
+				
 				if(!(Character.isDigit(input.charAt(i))) && input.charAt(i)!='.') {
 					System.out.println("You had to enter a number.");
 					exit = true;
@@ -88,9 +89,10 @@ public class ATM {
 			System.out.println("Enter an amount to deposit (written with \".\" instead of \",\"):");
 			input= sc.nextLine();
 			int l = input.length();
+			boolean floatingPointFound = false;
 			
 			for(int i=0; i<l; i++) {
-				boolean floatingPointFound = false;
+
 				if(!(Character.isDigit(input.charAt(i))) && input.charAt(i)!='.') {
 					System.out.println("You had to enter a number.");
 					exit = true;
