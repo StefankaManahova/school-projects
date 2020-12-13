@@ -8,8 +8,9 @@ public class Triangle extends GeometricObject {
    public Triangle() {
 	   super();
    }
-   public Triangle(double side1,double side2, double side3) {
-	   if(side1+side2<=side3 & side2+side3<=side1 & side1+side3<=side2) {
+   public Triangle(String colour,boolean filled,double side1,double side2, double side3) {
+	   super(colour,filled);
+	   if(side1+side2>side3 & side2+side3>side1 & side1+side3>side2) {
 		   this.side1 = (int)(side1*100)/100.0;
 		   this.side2 = (int)(side2*100)/100.0;
 		   this.side3 = (int)(side3*100)/100.0;
@@ -40,7 +41,7 @@ public class Triangle extends GeometricObject {
 	   double c = side3;
 	   
 	   double cosB = (a*a + c*c - b*b)/(2*a*c);
-	   double sinB = Math.sqrt(1 - cosB);
+	   double sinB = Math.sqrt(1 - cosB*cosB);
 	   
 	   double area = (a*c*sinB)/2;
 	   return area;
