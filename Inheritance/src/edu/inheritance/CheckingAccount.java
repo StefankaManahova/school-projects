@@ -5,7 +5,7 @@ public class CheckingAccount extends Account{
 	 
      CheckingAccount(int id, double balance, double overdraftLimit){
     	 super(id,balance);
-    	 this.overdraftLimit = overdraftLimit;
+    	 this.setOverdraftLimit(overdraftLimit);
      }
      
     public void withdraw(double sumToWithdraw) {
