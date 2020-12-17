@@ -16,4 +16,7 @@ public class SavingsAccount extends Account{
 		   
 	   }
    }
+   public String toString() {
+	   return super.toString()+"\nAccount type: savings account";
+   }
 }
