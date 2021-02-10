@@ -40,7 +40,7 @@ public class RecursionTasks2 {
 			return "0";
 		}
 		else {
-			return dec2Bin(value/2) + Integer.toString(value%2);
+			return dec2Bin(value/2) + value%2;
 		}
 		
 	}
