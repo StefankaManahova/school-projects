@@ -25,4 +25,8 @@ public class GenericStackInheritance<E> extends ArrayList<E> {
    public void push(E o) {
 	   super.add(o);
    }
+   
+   public boolean isEmpty() {
+	   return super.isEmpty();
+   }
 }
