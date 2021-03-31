@@ -5,12 +5,14 @@ import java.awt.Graphics;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.PriorityQueue;
 import java.awt.*;
 
 public class BallPanel extends JPanel{
 	
 		private int delay = 10;
-		private ArrayList<Ball> list = new ArrayList<Ball>();
+		private PriorityQueue<Ball> balls = new PriorityQueue<Ball>(500, Collections.reverseOrder());
 	// Create a timer with the initial delay
 		protected Timer timer = new Timer(delay, new TimerListener());
 
@@ -27,15 +29,45 @@ public class BallPanel extends JPanel{
 			this.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				for(int i=0; i<list.size(); i++){ 
-					Ball ball = (Ball)list.get(i);
+				for(Ball ball : balls){ 
 					double distance = distance(e.getX(), e.getY(), ball.x, ball.y);
 					if(distance <= ball.radius) {
-						list.remove(ball);
+						balls.remove(ball);
 						break;
 					}
 
 				}
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+					for(Ball ball: balls){
+						double distance = distance(e.getX(), e.getY(), ball.x, ball.y);
+						if(distance <= ball.radius) {
+							balls.remove(ball);
+							break;
+						}
+
+					}
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
 				
 			}
 
@@ -44,19 +76,18 @@ public class BallPanel extends JPanel{
 		}
 
 		public void add() {
-			list.add(new Ball());
+			balls.offer(new Ball());
 		}
 
 		public void subtract() {
-			if (list.size() > 0)
-				list.remove(list.size() - 1); // Remove the last ball
+			if (balls.size() > 0)
+				balls.remove(); // Remove the last ball
 		}
 
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			for (int i = 0; i < list.size(); i++) {
-				Ball ball = (Ball) list.get(i); // Get a ball
+			for (Ball ball : balls) {
 				g.setColor(ball.color); // Set ball color
 				// Check boundaries
 				if (ball.x < 0 || ball.x > getWidth())
@@ -70,20 +101,21 @@ public class BallPanel extends JPanel{
 			}
 			
 			ArrayList<Ball> ballsToRemove = new ArrayList<>();
-			for(int i=0; i<list.size(); i++) {
-				Ball ball = (Ball) list.get(i);
-				for(int j=i+1; j<list.size(); j++) {
-					Ball nextBall = (Ball) list.get(j);
-					double distance = distance(ball.x, ball.y,nextBall.x, nextBall.y);
-					if(distance <= ball.radius + nextBall.radius) {
-						ballsToRemove.add(nextBall);
-						ball.radius += nextBall.radius;
-						
+			for(Ball ball : balls) {
+				if(!ballsToRemove.contains(ball)) {
+				for(Ball nextBall : balls) {
+					if(nextBall!= ball) {
+						double distance = distance(ball.x, ball.y,nextBall.x, nextBall.y);
+						if(distance <= ball.radius + nextBall.radius) {
+							ballsToRemove.add(nextBall);
+							ball.radius += nextBall.radius;
+							
+						}
 					}
 				}
+				}
 			}
-			
-			list.removeAll(ballsToRemove);
+			balls.removeAll(ballsToRemove);
 		
 		}
 		
