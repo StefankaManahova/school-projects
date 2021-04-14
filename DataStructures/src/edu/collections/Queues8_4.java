@@ -15,6 +15,9 @@ public class Queues8_4 {
 		
 		PriorityQueue<String> union = new PriorityQueue<>(queue1);
 		union.addAll(queue2);
+		//PriorityQueue<String> onlyQueue2 = new priorityQueue(queue2);
+		//onlyQueue2.removeAll(queue1);
+		//union.addAll(onlyQueue2);
 		
 		PriorityQueue<String> intersection =  new PriorityQueue<>(queue1);
 		intersection.retainAll(queue2);

@@ -37,7 +37,7 @@ public class EvaluateExpression {
 					
 					else if (token.charAt(0) == '+' || token.charAt(0) == '-') 
 					{
-						//Process all +, -, *, / in the top of the operator stack
+						//Process all +, -, *, /,^ in the top of the operator stack
 						while (!operatorStack.isEmpty() && (operatorStack.peek() == '+' || operatorStack.peek() == '-'
 								|| operatorStack.peek() == '*' || operatorStack.peek() == '/' || operatorStack.peek() == '^' )) 
 						{
@@ -48,7 +48,7 @@ public class EvaluateExpression {
 					}
 					else if (token.charAt(0) == '*' || token.charAt(0) == '/')
 					{
-						//Process all *, / in the top of the operator stack
+						//Process all *, / ,^ in the top of the operator stack
 						while (!operatorStack.isEmpty() && (operatorStack.peek() == '*' || operatorStack.peek() == '/' || operatorStack.peek() == '^'))
 						{
 							processAnOperator(operandStack, operatorStack);

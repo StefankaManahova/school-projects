@@ -13,6 +13,7 @@ public class PostfixNotation {
 		} catch (Exception ex) {
 			System.out.println("Wrong expression: " + args[0]);
 		}
+		sc.close();
 	}
 
     public static int evaluatePostfixExpression(String expression){

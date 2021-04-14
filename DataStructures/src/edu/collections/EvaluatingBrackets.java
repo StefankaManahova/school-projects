@@ -18,16 +18,14 @@ public class EvaluatingBrackets {
 			Scanner reader = new Scanner(javaFile);
 			while(reader.hasNextLine()) {
 				String line = reader.nextLine();
-				line = insertBlanks(line);
-				String[] words = line.split("[\\s]");
-				for(String word : words) {
-					if(word.length()==0) {
-						continue;
+			
+				for(int i=0; i<line.length(); i++) {
+					char token = line.charAt(i);
+					
+					if(token == '{'|| token == '('|| token == '[') {
+						stack.push(token);
 					}
-					else if( word.charAt(0) == '{'|| word.charAt(0) == '('|| word.charAt(0) == '[') {
-						stack.push(word.charAt(0));
-					}
-					else if(word.charAt(0) == '}') {
+					else if(token == '}') {
 						if(!stack.empty() && stack.peek().equals('{')) {
 							stack.pop();
 						}
@@ -35,7 +33,7 @@ public class EvaluatingBrackets {
 							correctBrackets = false;
 						}
 					}
-					else if(word.charAt(0) == ')') {
+					else if(token == ')') {
 						if(!stack.empty() && stack.peek().equals('(')) {
 							stack.pop();
 						}
@@ -43,7 +41,7 @@ public class EvaluatingBrackets {
 							correctBrackets = false;
 						}
 					}
-					else if(word.charAt(0) == ']') {
+					else if(token == ']') {
 						if(!stack.empty() && stack.peek().equals('[')) {
 							stack.pop();
 						}
@@ -55,6 +53,7 @@ public class EvaluatingBrackets {
 			
 			}
 			
+			reader.close();
 			if(correctBrackets && stack.empty()) {
 				System.out.println("The brackets are correctly distributed.");
 			}
@@ -67,19 +66,6 @@ public class EvaluatingBrackets {
 			e.printStackTrace();
 		}
 
-	}
-	
-	public static String insertBlanks(String s) {
-		String result = "";
-		for(int i=0; i<s.length(); i++) {
-			if(s.charAt(i) == '(' ||s.charAt(i) == ')' || s.charAt(i) == '{' || s.charAt(i) == '}' || s.charAt(i) == '[' ||s.charAt(i) == ']') {
-				result += " " + s.charAt(i) + " ";
-			}
-			else {
-				result += s.charAt(i);
-			}
-		}
-		return result;
 	}
 
 }
