@@ -15,7 +15,7 @@ public class PostfixNotation {
 		}
 		sc.close();
 	}
-
+	
     public static int evaluatePostfixExpression(String expression){
     	//Create operandStack to store operands
     	Stack<Integer> operandStack = new Stack<Integer>();
