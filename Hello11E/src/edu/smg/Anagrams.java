@@ -19,7 +19,7 @@ public class Anagrams {
 		{
 			if(word1.charAt(i)>= 'a'&& word1.charAt(i)<= 'z' || word1.charAt(i)>= 'A'&& word1.charAt(i)<='Z')
 			{
-				for( int j=0; j < copy2.length();j++)
+				for(int j=0; j < copy2.length(); j++)
 				{
 					if(copy2.charAt(j) == word1.charAt(i)){
 						copy2 = copy2.substring(0,j)+copy2.substring(j+1);

@@ -18,7 +18,7 @@ public class AnagramsNew {
 			{  
 				char charInWord1 = word1.charAt(i);
 			    int indexIn2 = copy2.indexOf(charInWord1);
-				if ( indexIn2 == -1)
+				if (indexIn2 == -1)
 				{
 					isAnagram = false;
 					break;
