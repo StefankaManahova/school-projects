@@ -53,7 +53,7 @@ public class GoogleInterview {
 					int[] indexes = {i,mid};
 					return indexes;
 				}
-				else if(array[mid] < sum - array[i]){
+				else { //array[mid] < sum - array[i]
 					low = mid + 1;
 				}
 			}
@@ -66,14 +66,15 @@ public class GoogleInterview {
 		int low = 0;
 		int high = array.length - 1;
 		while(high > low) {
-			if(array[high] + array[low] == sum) {
+			int currentSum = array[high] + array[low];
+			if(currentSum == sum) {
 				int[] indexes =  {low,high};
 				return indexes;
 			}
-			else if(array[high] + array[low] > sum) {
+			else if(currentSum > sum) {
 				high--;
 			}
-			else if(array[high] + array[low] < sum) {
+			else {//currentSum < sum
 				low++;
 			}				
 		}
