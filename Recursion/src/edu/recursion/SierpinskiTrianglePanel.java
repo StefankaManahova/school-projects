@@ -61,67 +61,67 @@ public class SierpinskiTrianglePanel extends JPanel {
 	private static Point midpoint(Point p1, Point p2) {
 		return new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
 	}
-	private static void changeColour(int time) {
-		while(time>0) {
-	    for(int i=0; i<7 && time>0; i++) {
+	private static void changeColour(int iterations) {
+		while(iterations>0) {
+	    for(int i=0; i<7 && iterations>0; i++) {
 	    	if(blue<215) {
 	    		blue += 30;
 	    	}
 	    	else {
 	    		blue = 245;
 	    	}
-	    	time--;
+	    	iterations--;
 	    }
 	
 	    
-	    for(int i=0; i<7 && time>0; i++) {
+	    for(int i=0; i<7 && iterations>0; i++) {
 	    	if(red>37) {
 	    		red -=30;
 	    	}
 	    	else {
 	    		red = 7;
 	    	}
-	    	time--;
+	    	iterations--;
 	    }
 	    
-	    for(int i=0; i<7 && time>0; i++) {
+	    for(int i=0; i<7 && iterations>0; i++) {
 	    	if(green<215) {
 	    		green += 30;
 	    	}
 	    	else {
 	    		green = 245;
 	    	}
-	    	time--;	
+	    	iterations--;	
 		}
 	    
-	    for(int i=0; i<7 && time>0; i++) {
+	    for(int i=0; i<7 && iterations>0; i++) {
 	    	if(blue>37) {
 	    		blue -=30;
 	    	}
 	    	else {
 	    		blue = 7;
 	    	}
-	    	time--;
+	    	iterations--;
 	    }
 	    
-	    for(int i=0; i<7 && time>0; i++) {
+	    for(int i=0; i<7 && iterations>0; i++) {
 	    	if(red<215) {
 	    		red += 30;
 	    	}
 	    	else {
 	    		red = 245;
 	    	}
-	    	time--;	
+	    	iterations--;	
 		}
 	    
-	    for(int i=0; i<7 && time>0; i++) {
+	    for(int i=0; i<7 && iterations>0; i++) {
 	    	if(green>37) {
 	    		green -=30;
 	    	}
 	    	else {
 	    		green = 7;
 	    	}
-	    	time--;
+	    	iterations--;
 	    }
 	  }  
 	}
