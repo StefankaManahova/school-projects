@@ -347,11 +347,11 @@ public class CafeMenu {
 			public void actionPerformed(ActionEvent arg0) {
 				bill.setText("                                Bill");
 				if(sum!=0) {
+					sum = 0.00;
+					DecimalFormat formatter = new DecimalFormat("0.00");
+					lblbillValue.setText(formatter.format(sum).replace('.', ',') + " lv.");
 					JOptionPane.showMessageDialog(null,"Thank you for choosing us!\nYour order will arrive in no longer than 1 hour.\nHave a nice day and enjoy your sweets!","Successful order",JOptionPane.INFORMATION_MESSAGE);
 				}
-				sum = 0.00;
-				DecimalFormat formatter = new DecimalFormat("0.00");
-				lblbillValue.setText(formatter.format(sum).replace('.', ',') + " lv.");	
 			}
 			
 		});

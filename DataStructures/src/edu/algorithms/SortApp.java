@@ -1,4 +1,4 @@
-package edu.collections;
+package edu.algorithms;
 
 import javax.swing.JFrame;
 

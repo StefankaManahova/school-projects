@@ -1,17 +1,17 @@
-package edu.collections;
+package edu.algorithms;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-public class SortControl extends JPanel {
-	private SortingPanel sortingPanel = new SortingPanel();
-
+public class SelectionSortControl extends JPanel {
+	private SelectionSortPanel sortingPanel = new SelectionSortPanel();
 	private JButton nextStepBtn = new JButton("NextStep");
 
-	public SortControl() {
+	public SelectionSortControl() {
 
 		setLayout(new BorderLayout());
 		add(sortingPanel, BorderLayout.CENTER);

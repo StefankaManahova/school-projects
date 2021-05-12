@@ -1,4 +1,4 @@
-package edu.collections;
+package edu.algorithms;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
