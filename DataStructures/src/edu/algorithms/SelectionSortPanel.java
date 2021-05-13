@@ -25,11 +25,11 @@ public class SelectionSortPanel extends JPanel {
 	int currentMinIndex = -1;
 	
 	//private Color blue = new Color(24, 222, 209);
-	private Color blue = new Color(0, 191, 255);
+	private Color purpleLighter = new Color(219, 77, 255);
 	
-	private Color pinkLight = new Color(255, 128, 179);
-	private Color pinkDarker = new Color(255, 77, 148);
-	private Color purple = new Color(153, 0, 204);
+	private Color pinkLight = new Color(255, 153, 221);
+	private Color pinkDarker = new Color(255, 102, 204);
+	private Color purple = new Color(204, 0, 255);
 	
 
 	public SelectionSortPanel() {
@@ -127,10 +127,10 @@ public class SelectionSortPanel extends JPanel {
 			if (stage == noSortingStage) {
 				g.setColor(pinkLight);
 			} else if (j == currentMinIndex) {
-				g.setColor(blue);
+				g.setColor(purpleLighter);
 			}
 			else if (j == currentI && stage == compareStage) {
-				g.setColor(blue);
+				g.setColor(pinkDarker);
 			}
 			else if (j == currentI && stage == putInPlaceStage) {
 				g.setColor(purple);

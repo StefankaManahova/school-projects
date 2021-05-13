@@ -32,7 +32,7 @@ public class SortingPanel extends JPanel {
 	boolean hasSwaps = false;
 
 	public SortingPanel() {
-
+		
 	}
 
 	public void nextStepInSorting() {
