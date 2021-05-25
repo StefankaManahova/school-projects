@@ -32,8 +32,8 @@ public class MazeSolver {
 			m.path.push(p);
 
 			while (true) {
-				int y = m.path.peek().y;
-				int x = m.path.peek().x;
+				int y = m.path.peek().getY();
+				int x = m.path.peek().getX();
 
 				m.maze[y][x] = 0; // marking the positions I have already been on with zero, so we avoid going in
 									// circles
