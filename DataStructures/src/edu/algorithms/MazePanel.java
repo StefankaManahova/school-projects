@@ -81,18 +81,18 @@ public class MazePanel extends JPanel {
 				
 				int diameterSmall = width/6;
 				int XsmallCircle1 = X + width/4 - diameterSmall - 1;
-				int YsmallCircle1 = Y + (width/3 - diameterSmall)/2;
+				int YsmallCircle1 = Y + (height/3 - diameterSmall)/2;
 				
-				int heightBig = width/3;
+				int heightBig = height/3;
 				int widthBig = width/2;
 				int XbigCircle1 = X + width/4;
 				int YbigCircle1 = Y;
 				
 				int XsmallCircle2 = X + width - width/2 - diameterSmall - 1;
-				int YsmallCircle2 = Y + width/3 + (width - (width/3)*2) + (width/3 - diameterSmall)/2; 
+				int YsmallCircle2 = Y + height/3 + (height - (height/3)*2) + (height/3 - diameterSmall)/2; 
 				
 				int XbigCircle2 = X + width - width/2;
-				int YbigCircle2 = Y + width/3 + (width - (width/3)*2);
+				int YbigCircle2 = Y + height/3 + (height - (height/3)*2);
 				g.setColor(Color.YELLOW);
 				g.fillOval(XsmallCircle1, YsmallCircle1, diameterSmall, diameterSmall);
 				g.fillOval(XsmallCircle2, YsmallCircle2, diameterSmall, diameterSmall);
