@@ -89,7 +89,7 @@ public class MazePanel extends JPanel {
 				int YbigCircle1 = Y;
 				
 				int XsmallCircle2 = X + width - width/2 - diameterSmall - 1;
-				int YsmallCircle2 = Y + height/3 + (height - (height/3)*2) + (height/3 - diameterSmall)/2; 
+				int YsmallCircle2 = Y + height/3 + (height - (height/3)*2) + (width/3 - diameterSmall)/2; 
 				
 				int XbigCircle2 = X + width - width/2;
 				int YbigCircle2 = Y + height/3 + (height - (height/3)*2);
