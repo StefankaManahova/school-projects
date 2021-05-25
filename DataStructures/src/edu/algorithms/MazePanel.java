@@ -2,8 +2,6 @@ package edu.algorithms;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.File;
-import java.util.Scanner;
 import java.util.Stack;
 
 import javax.swing.JPanel;
