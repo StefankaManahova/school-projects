@@ -61,7 +61,7 @@ public class MazePanel extends JPanel {
 				int X = (this.getWidth() - columns*(width + 1) + 1)/2  + j*(width + 1);
 				g.setColor(Color.WHITE);
 				g.fillRect(X, Y, width, height);
-				if (maze[i][j] == 0) {
+				if (maze[i][j] == wall) {
 //					g.setColor(Color.BLACK);
 //					g.drawLine(X, Y, X + width, Y + height);
 //					g.drawLine(X + width, Y, X, Y + height);
@@ -104,7 +104,7 @@ public class MazePanel extends JPanel {
 	public String findPath () {
 		if(path.isEmpty()) {
 			int startingY = 1;
-			while (maze[startingY][0] == 0) {
+			while (maze[startingY][0] == wall) {
 				startingY++;
 			}
 			start = new Position(startingY, 0);
@@ -172,7 +172,7 @@ public class MazePanel extends JPanel {
 				System.out.println("Moved back");
 				if (path.size() <= 0) {
 					startingY = start.getY() + 1;
-					while (maze[startingY][0] == 0 && startingY < rows - 1) {
+					while (maze[startingY][0] == wall && startingY < rows - 1) {
 						startingY++;
 					}
 					if (startingY < rows - 1) {
@@ -206,8 +206,8 @@ public class MazePanel extends JPanel {
 		}
 		for (int i = 0; i < rows; i++) {
 			for( int j = 0; j < columns; j++) {
-				if (maze[i][j] == -1) {
-					maze[i][j] = 1;
+				if (maze[i][j] == alreadyVisited) {
+					maze[i][j] = 1;//свободно поле
 				}
 			}
 		}

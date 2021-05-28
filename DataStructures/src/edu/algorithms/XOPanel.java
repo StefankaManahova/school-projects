@@ -9,8 +9,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class XOPanel extends JPanel{
-	private int[][] board;
-	private int side = 3;
+	private char[][] board;
+	private final int side = 3;
 	private boolean AIsOnTurn = true;
 	private boolean winner = false;
 	
@@ -20,27 +20,27 @@ public class XOPanel extends JPanel{
 	
 	
 	public XOPanel() {
-		this.board = new int[side][side];
+		this.board = new char[side][side];
 		for (int i = 0; i < side; i++) {
-			this.board[i] = new int[side];
+			this.board[i] = new char[side];
 			for (int j = 0; j < side; j++) {
-				board[i][j] = 0;
+				board[i][j] = '-';
 			}
 			
 		}
 		repaint();
 		this.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				int i = chosenSquareI(e.getY());
 				int j = chosenSquareJ(e.getX());
-				if(i != -1 && j != -1 && board[i][j] == 0 && !winner) {
+				if(i != -1 && j != -1 && board[i][j] == '-' && !winner) {
 					if(AIsOnTurn) {
-						board[i][j] = 1;
+						board[i][j] = 'x';
 						AIsOnTurn = false;
 					}
 					else {
-						board[i][j] = 2;
+						board[i][j] = 'o';
 						AIsOnTurn = true;
 					}
 				}
@@ -67,7 +67,7 @@ public class XOPanel extends JPanel{
 				int X = (this.getWidth() - side*(width + 1) + 1)/2  + j*(width + 1);
 				g.setColor(Color.WHITE);
 				g.fillRect(X, Y, width, height);
-			    if (board[i][j] == 1) {// 1 = X
+			    if (board[i][j] == 'x') {
 				    g.setColor(XColour);
 					int[] xpoints1 = {X + 10, X + 18, X + width - 10, X + width - 18};
 					int [] ypoints1 = {Y + 10, Y + 10, Y + height - 10, Y + height - 10};
@@ -79,7 +79,7 @@ public class XOPanel extends JPanel{
 					Polygon secondLine = new Polygon(xpoints2, ypoints2,4);
 					g.fillPolygon(secondLine);
 				}
-			    else if(board[i][j] == 2) {//2 = O
+			    else if(board[i][j] == 'o') {
 			    	if (width < height) {
 				    	g.setColor(OColour);
 				    	g.fillOval(X + 10, Y + 10 + (height - width)/2, width - 20, width - 20);
@@ -114,9 +114,9 @@ public class XOPanel extends JPanel{
 		int height = (this.getHeight()- 3)/side - 1;
 		
 		for (int i = 0; i < side; i++) {
-			int Y = (this.getHeight() - side*(height + 1) + 1)/2 + i*(height + 1);
-			int nextY = Y + height + 1;
-			if (y >= Y && y < nextY) {
+			int upY = (this.getHeight() - side*(height + 1) + 1)/2 + i*(height + 1);
+			int downY = upY + height;
+			if (y >= upY && y < downY) {
 				return i;
 			}
 		}
@@ -127,7 +127,7 @@ public class XOPanel extends JPanel{
 		for (int i = 0; i < side; i++) {
 			winner = true;
 			for (int j = 0; j < side - 1; j++) {
-				if(board[i][j] != board[i][j + 1] || board[i][j] == 0) {
+				if(board[i][j] != board[i][j + 1] || board[i][j] == '-') {
 					winner = false;
 					break;
 				}
@@ -145,7 +145,7 @@ public class XOPanel extends JPanel{
 		for (int j = 0; j < side; j++) {
 			winner = true;
 			for (int i = 0; i< side - 1; i++) {
-				if(board[i][j] != board[i + 1][j] || board[i][j] == 0) {
+				if(board[i][j] != board[i + 1][j] || board[i][j] == '-') {
 					winner = false;
 					break;
 				}
@@ -162,7 +162,7 @@ public class XOPanel extends JPanel{
 		
 		winner = true;
 		for (int i = 0; i < side - 1; i++) {
-			if(board[i][i] != board[i + 1][i + 1] || board[i][i] == 0) {
+			if(board[i][i] != board[i + 1][i + 1] || board[i][i] == '-') {
 				winner = false;
 				break;
 			}
@@ -178,7 +178,7 @@ public class XOPanel extends JPanel{
 		
 		winner = true;
 		for (int i = 0; i < side - 1; i++) {
-			if(board[i][side - i - 1] != board[i + 1][side - i - 2] || board[i][side - i - 1] == 0) {
+			if(board[i][side - i - 1] != board[i + 1][side - i - 2] || board[i][side - i - 1] == '-') {
 				winner = false;
 				break;
 			}
@@ -204,7 +204,7 @@ public class XOPanel extends JPanel{
 	private boolean isFull() {
 		for (int i = 0; i < side; i++) {
 			for(int j = 0; j < side; j++) {
-				if (board[i][j] == 0) {
+				if (board[i][j] == '-') {
 					return false;
 				}
 			}
