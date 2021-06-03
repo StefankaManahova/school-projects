@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
@@ -26,6 +27,7 @@ public class GameBoardPanel extends JPanel {
 	protected static Color wheatColour = new Color(255, 204, 0);
 	
 	protected static int side;
+	protected static int space;
 	
 	protected ArrayList<Field> fields;
 	protected Player player1 = new Player();
@@ -34,11 +36,12 @@ public class GameBoardPanel extends JPanel {
 	protected Player player4 = new Player();
 	
 	protected int playerOnTurn = 1;
-	protected HashMap<Point,Player> pointsWithVillages = new HashMap<Point,Player>();
 	
 	protected double mouseClickRadiusRatio = 0.1;
-	protected double roundingUpMistakeRatio= 0.04;
+	protected double roundingUpMistakeRatio= 0.4;
 	protected boolean firstPaint = true;
+	
+	protected HashSet<Point> allPoints = new HashSet<Point>();
 	
 	public GameBoardPanel() {
 		fields = new ArrayList<Field>(){{
@@ -77,30 +80,54 @@ public class GameBoardPanel extends JPanel {
 				
 				for(Point point : player1.availablePoints) {
 					if(distance(point.X, point.Y, e.getX(), e.getY()) < mouseClickRadius) {
-						pointsWithVillages.put(point, player1);
-						System.out.println("89");
+						player1.pointsWithVillages.add(point);
+						
+						if(player1.availablePoints.containsAll(allPoints)) {
+							player1.availablePoints.clear();
+						}
+						else {
+							player1.availablePoints.remove(point);
+						}
+						System.out.println(roundingUpMistake);
+						
+						int point1X = (int)(point.X + Math.sqrt(3) / 2 * side + space / 2);
+						int point1Y = point.Y - side / 2;
+						int point2X = (int)(point.X - Math.sqrt(3) / 2 * side + space / 2);
+						int point2Y = point.Y - side / 2;
+						int point3X = point.X;
+						int point3Y = point.Y + side + space;
+						
+						for(Point p : allPoints) {
+							if(distance(p.X, p.Y, point1X, point1Y) <= roundingUpMistake) {
+								player1.availablePoints.add(p);
+							}
+							else if(distance(p.X, p.Y, point2X, point2Y) <= roundingUpMistake) {
+								player1.availablePoints.add(p);
+							}
+							else if(distance(p.X, p.Y, point3X, point3Y) <= roundingUpMistake) {
+								player1.availablePoints.add(p);
+							}
+						}
 						
 						for(Field field : fields) {
-							if(distance(point.X, point.Y, field.A.X, field.A.Y) < roundingUpMistake || 
-							   distance(point.X, point.Y, field.B.X, field.B.Y) < roundingUpMistake ||
-							   distance(point.X, point.Y, field.C.X, field.C.Y) < roundingUpMistake ||
-							   distance(point.X, point.Y, field.D.X, field.D.Y) < roundingUpMistake ||
-							   distance(point.X, point.Y, field.E.X, field.E.Y) < roundingUpMistake ||
-							   distance(point.X, point.Y, field.F.X, field.F.Y) < roundingUpMistake) {
+							if(distance(point, field.A) <= roundingUpMistake || 
+							   distance(point, field.B) <= roundingUpMistake ||
+							   distance(point, field.C) <= roundingUpMistake ||
+							   distance(point, field.D) <= roundingUpMistake ||
+							   distance(point, field.E) <= roundingUpMistake ||
+							   distance(point, field.F) <= roundingUpMistake) {
 								field.pieces.add(new Piece(player1, "village"));
 							}			
 						}
-						player1.availablePoints.addLast(new Point((int)(point.X + Math.sqrt(3) / 2 * side), point.Y - side / 2));
-						player1.availablePoints.addLast(new Point((int)(point.X - Math.sqrt(3) / 2 * side), point.Y -  side / 2));
-						player1.availablePoints.addLast(new Point(point.X, point.Y + side / 2));
 					}
 				}
+				repaint();
 			}
 		});
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
-		int space = (int)(spaceRatio * this.getHeight());
+		space = (int)(spaceRatio * this.getHeight());
 		int topBottomMargins = (int)(topBottomMarginsRatio * this.getHeight());
 	
 		side = (int)((this.getHeight() - 2 * topBottomMargins - 4 * space) / 8);
@@ -108,18 +135,19 @@ public class GameBoardPanel extends JPanel {
 		
 		int leftRightMargins = (int)((this.getWidth() - 5 * Math.sqrt(3) * side) / 2);
 		
-		if(firstPaint) {
-			player1.availablePoints.add(new Point((int)(leftRightMargins + 3 * Math.sqrt(3)* side + 2 * space + space / 2), topBottomMargins + 3 * side + side / 2 + 2 * space));
-		}
-		System.out.println("Point " + player1.availablePoints.getLast().X + " " + player1.availablePoints.getLast().Y);
-		
 		for(int i = 0; i < 3; i++) {//first row 
 			int upperLeftX = (int)(leftRightMargins + Math.sqrt(3) * side + space + i * Math.sqrt(3) * side + i * space);
 			int upperLeftY = topBottomMargins;
 			String fieldType = fields.get(i).type;
 			paint(upperLeftX, upperLeftY, g, fieldType);
 			if(firstPaint) {
-				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side) ;
+				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
+				allPoints.add(fields.get(i).A);
+				allPoints.add(fields.get(i).B);
+				allPoints.add(fields.get(i).C);
+				allPoints.add(fields.get(i).D);
+				allPoints.add(fields.get(i).E);
+				allPoints.add(fields.get(i).F);
 			}
 		}
 		
@@ -130,7 +158,13 @@ public class GameBoardPanel extends JPanel {
 			String fieldType = fields.get(i).type;
 			paint(upperLeftX, upperLeftY, g, fieldType);
 			if(firstPaint) {
-				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side) ;
+				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
+				allPoints.add(fields.get(i).A);
+				allPoints.add(fields.get(i).B);
+				allPoints.add(fields.get(i).C);
+				allPoints.add(fields.get(i).D);
+				allPoints.add(fields.get(i).E);
+				allPoints.add(fields.get(i).F);
 			}
 	   }
 		for(int i = 7; i < 12; i++) {//third row 
@@ -140,7 +174,13 @@ public class GameBoardPanel extends JPanel {
 			String fieldType = fields.get(i).type;
 			paint(upperLeftX, upperLeftY, g, fieldType);
 			if(firstPaint) {
-				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side) ;
+				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
+				allPoints.add(fields.get(i).A);
+				allPoints.add(fields.get(i).B);
+				allPoints.add(fields.get(i).C);
+				allPoints.add(fields.get(i).D);
+				allPoints.add(fields.get(i).E);
+				allPoints.add(fields.get(i).F);
 			}
 	   }
 		for(int i = 12; i < 16; i++) {//forth row 
@@ -150,34 +190,80 @@ public class GameBoardPanel extends JPanel {
 			String fieldType = fields.get(i).type;
 			paint(upperLeftX, upperLeftY, g, fieldType);
 			if(firstPaint) {
-				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side) ;
+				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
+				allPoints.add(fields.get(i).A);
+				allPoints.add(fields.get(i).B);
+				allPoints.add(fields.get(i).C);
+				allPoints.add(fields.get(i).D);
+				allPoints.add(fields.get(i).E);
+				allPoints.add(fields.get(i).F);
 			}
 	   }
-		for(int i = 16; i < 19; i++) {//fiftht row 
+		for(int i = 16; i < 19; i++) {//fifth row 
 			int j = i - 16;
 			int upperLeftX = (int)(leftRightMargins + Math.sqrt(3) * side + space + j * Math.sqrt(3) * side + j * space);
 			int upperLeftY = topBottomMargins + 6 * side + 4 * space;
 			String fieldType = fields.get(i).type;
 			paint(upperLeftX, upperLeftY, g, fieldType);
 			if(firstPaint) {
-				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side) ;
+				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
+				allPoints.add(fields.get(i).A);
+				allPoints.add(fields.get(i).B);
+				allPoints.add(fields.get(i).C);
+				allPoints.add(fields.get(i).D);
+				allPoints.add(fields.get(i).E);
+				allPoints.add(fields.get(i).F);
 			}
 		}
 		
-		firstPaint = false;
-		
-		for(Point point : player1.availablePoints) {
-			int squareSide = 4 * space ;
-			int houseUpLeftX = point.X - squareSide / 2;
-			int houseUpLeftY = point.Y - squareSide / 2;
-			g.setColor(new Color(128, 0, 0));
-			g.fillRect(houseUpLeftX, houseUpLeftY, squareSide, squareSide);
-			
-			int[] triangleXPoints = {houseUpLeftX - squareSide / 2, houseUpLeftX + 3 * squareSide / 2, houseUpLeftX + squareSide / 2};
-			int[] triangleYPoints = {houseUpLeftY, houseUpLeftY, houseUpLeftY -  squareSide};
-			Polygon roof = new Polygon(triangleXPoints, triangleYPoints, 3);
-			g.fillPolygon(roof);
+		for(Point point : allPoints){
+			point.setPanelSize(this.getHeight(), this.getWidth());
 		}
+		
+		if(firstPaint) {
+			HashSet<Point> pointsToAdd = new HashSet<Point>();
+			HashSet<Point> pointsToRemove = new HashSet<Point>();
+			for(Point point1 : allPoints) {
+				for(Point point2 : allPoints) {
+					if((point2.X != point1.X || point2.Y != point1.Y)  && distance(point1, point2) <= space * 3 / 2 && !pointsToRemove.contains(point1) && !pointsToRemove.contains(point2)) {
+						pointsToRemove.add(point1);
+						pointsToRemove.add(point2);
+						Point middle = new Point((double)((point1.X + point2.X)/2 - leftRightMargins) / this.getHeight(),(double)((point1.Y + point2.Y)/2) / this.getHeight());
+						pointsToAdd.add(middle);
+						middle.setPanelSize(this.getHeight(), this.getWidth());
+						break;
+					}
+				}
+			}
+			allPoints.addAll(pointsToAdd);
+			allPoints.removeAll(pointsToRemove);
+			pointsToAdd.clear();
+			pointsToRemove.clear();
+			for(Point point1 : allPoints) {
+				for(Point point2 : allPoints) {
+					if((point2.X != point1.X || point2.Y != point1.Y)  && distance(point1, point2) <= space * 3 / 2 && !pointsToRemove.contains(point1) && !pointsToRemove.contains(point2)) {
+						pointsToRemove.add(point1);
+						pointsToRemove.add(point2);
+						Point middle = new Point((double)((point1.X + point2.X)/2 - leftRightMargins) / this.getHeight(),(double)((point1.Y + point2.Y)/2) / this.getHeight());
+						pointsToAdd.add(middle);
+						middle.setPanelSize(this.getHeight(), this.getWidth());
+						break;
+					}
+				}
+			}
+			allPoints.addAll(pointsToAdd);
+			allPoints.removeAll(pointsToRemove);
+		}
+		
+		if(firstPaint) {
+			player1.availablePoints.addAll(allPoints);
+		}
+		for(Point point : player1.pointsWithVillages) {
+			int squareSide = 7 * space / 2;
+			paintVillage(g, point, squareSide);
+		}
+		
+		firstPaint = false;
 		
    }
 	private void paint(int upperLeftX, int upperLeftY, Graphics g, String fieldType) {
@@ -216,5 +302,20 @@ public class GameBoardPanel extends JPanel {
 	
 	public static double distance(int x1, int y1, int x2, int y2) {
 		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+	}
+	public static double distance(Point p1, Point p2) {
+		return Math.sqrt(Math.pow(p1.X - p2.X, 2) + Math.pow(p1.Y - p2.Y, 2));
+	}
+	
+	public void paintVillage(Graphics g, Point point, int squareSide) {
+		int houseUpLeftX = point.X - squareSide / 2;
+		int houseUpLeftY = point.Y - squareSide / 2;
+		g.setColor(new Color(128, 0, 0));
+		g.fillRect(houseUpLeftX, houseUpLeftY, squareSide, squareSide);
+		
+		int[] triangleXPoints = {houseUpLeftX - squareSide / 2, houseUpLeftX + 3 * squareSide / 2, houseUpLeftX + squareSide / 2};
+		int[] triangleYPoints = {houseUpLeftY, houseUpLeftY, houseUpLeftY -  squareSide};
+		Polygon roof = new Polygon(triangleXPoints, triangleYPoints, 3);
+		g.fillPolygon(roof);
 	}
 }
