@@ -169,13 +169,6 @@ public class GameBoardPanel extends JPanel {
 										p.free = false;
 									}
 								}
-								
-								for(Field field : fields) {
-									for(Point p : field.points)
-									if(distance(point,p) <= roundingUpMistake) {
-										field.pieces.add(new Piece(player, "village"));
-									}			
-								}
 							}
 							else if(point.type == 'Z') {
 								int road1X = (int)(point.X + Math.sqrt(3) / 4 * side + space / 4);
