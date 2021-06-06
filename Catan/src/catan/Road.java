@@ -1,25 +1,20 @@
 package catan;
 
-public class Point {
+public class Road {
 	protected double ratioX;
 	protected double ratioY;//from the beginning of the game board area, not the panel
 	protected int X;
 	protected int Y;
 	protected boolean free = true;
+	protected char slope;
 	
-	protected char type;
+	protected boolean isFirst = false;
 	
-	public Point(double ratioX, double ratioY, char type) {
+	public Road(double ratioX, double ratioY, char slope) {
 		this.ratioX = ratioX;
 		this.ratioY = ratioY;
-		this.type = type;
+		this.slope = slope;
 	}
-	
-	public Point(double ratioX, double ratioY) {
-		this.ratioX = ratioX;
-		this.ratioY = ratioY;
-	}
-	
 	public void setPanelSize(int panelHeight,int beginningOfBoardX){
 		this.Y= (int)(ratioY * panelHeight);
 		this.X = (int)((ratioX * panelHeight) + beginningOfBoardX);
