@@ -23,6 +23,7 @@ public class CatanBoard extends JPanel{
 	protected static Color fieldColour = new Color(83, 255, 26);
 	protected static Color rockColour = new Color(122, 122, 82);
 	protected static Color wheatColour = new Color(255, 204, 0);
+	protected static Color desertColour = new Color(255, 153, 51);
 	
 	protected static int side;
 	protected static int space;
@@ -57,7 +58,8 @@ public class CatanBoard extends JPanel{
 		add(new Field("tree"));	
 		add(new Field("tree"));
 		
-		add(new Field("bricks"));
+		add(new Field("desert"));
+		
 		add(new Field("bricks"));	
 		add(new Field("bricks"));
 		add(new Field("bricks"));
@@ -674,6 +676,12 @@ public class CatanBoard extends JPanel{
 		else if(fieldType.equals("wool")) {
 			g.setColor(fieldColour);
 		}
+		else if(fieldType.equals("desert")) {
+			g.setColor(desertColour);
+			int centerX = (int)(upperLeftX + Math.sqrt(3) * side / 2);
+			int centerY = upperLeftY + side;
+			paintBandits(g, centerX, centerY);
+		}
 		g.fillPolygon(field);
 	}
 	
@@ -744,5 +752,8 @@ public class CatanBoard extends JPanel{
 			Polygon road = new Polygon(Xs, Ys, 4);
 			g.fillPolygon(road);
 		}
+	}
+	public void paintBandits(Graphics g, int centerX, int centerY) {
+		
 	}
 }
