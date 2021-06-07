@@ -587,8 +587,6 @@ public class CatanBoard extends JPanel{
 						pointsToRemove.add(point2);
 						Point middle = new Point((double)((point1.X + point2.X)/2 - leftRightMargins) / this.getHeight(),(double)((point1.Y + point2.Y)/2) / this.getHeight(), point1.type);
 						pointsToAdd.add(middle);
-						g.setColor(Color.BLACK);
-						paintVillage(g, middle, space);
 						middle.setPanelSize(this.getHeight(), leftRightMargins);
 						break;
 					}
@@ -628,19 +626,18 @@ public class CatanBoard extends JPanel{
 //			g.setColor(new Color(128, 0, 0));
 //			paintRoad(g, road);
 //		}
-		for(Road road :  players[0].availableRoads) {
-	//		int squareSide = 7 * space / 2;
-			g.setColor(new Color(128, 0, 0));
-			paintRoad(g, road);
-		}
+//		for(Road road :  players[0].availableRoads) {
+//			int squareSide = 7 * space / 2;
+//			g.setColor(new Color(128, 0, 0));
+//			paintRoad(g, road);
+//		}
 		for(Road road :  players[0].occupiedRoads) {
 			g.setColor(Color.BLUE);
 			paintRoad(g, road);
 		}
 		for(Point point :  players[0].pointsWithVillages) {
-			int squareSide = 7 * space / 2;
-			g.setColor(Color.PINK);
-			paintVillage(g, point, squareSide);
+			g.setColor(Color.BLUE);
+			paintVillage(g, point);
 		}
 		
 		firstPaint = false;
@@ -691,7 +688,8 @@ public class CatanBoard extends JPanel{
 		return Math.sqrt(Math.pow(r1.X - r2.X, 2) + Math.pow(r1.Y - r2.Y, 2));
 	}
 	
-	public void paintVillage(Graphics g, Point point, int squareSide) {
+	public void paintVillage(Graphics g, Point point) {
+		int squareSide = 7 * space / 2;
 		int houseUpLeftX = point.X - squareSide / 2;
 		int houseUpLeftY = point.Y - squareSide / 2;
 		g.fillRect(houseUpLeftX, houseUpLeftY, squareSide, squareSide);
