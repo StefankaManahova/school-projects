@@ -2,9 +2,12 @@ package catan;
 
 import java.util.LinkedList;
 
+import javax.swing.JLabel;
+
 public class Field {
 	protected String type;
 	protected int number;
+	protected boolean hasBandits = false;
 	
 	protected Point center;
 	protected static int side;
@@ -16,8 +19,16 @@ public class Field {
 	
 	Field(String type){
 		if(type.equals("tree") || type.equals("bricks") || type.equals("rock")
-				|| type.equals("wool") || type.equals("wheat")){
+				|| type.equals("wool") || type.equals("wheat") || type.equals("desert")){
 			this.type = type;
+		}
+	}
+	
+	Field(String type, boolean hasBandits){
+		if(type.equals("tree") || type.equals("bricks") || type.equals("rock")
+				|| type.equals("wool") || type.equals("wheat") || type.equals("desert")){
+			this.type = type;
+			this.hasBandits = hasBandits;
 		}
 	}
 	 public void setNumber(int number) {
