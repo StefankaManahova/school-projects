@@ -44,8 +44,8 @@ public class GameBoardPanel extends JPanel {
 	}
 
 	
-	protected static int side;
-	protected static int space;
+	protected int side;
+	protected int space;
 	
 	protected ArrayList<Field> fields;
 	protected ArrayList<Integer> numbers;
@@ -507,6 +507,7 @@ public class GameBoardPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		this.setBackground(Color.WHITE);
 		Map<?, ?> desktopHints = 
 			    (Map<?, ?>) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
 
