@@ -64,8 +64,8 @@ public class GameBoardPanel extends JPanel {
 	
 	protected int stage = noActionStage;
 	
-	public GameBoardPanel() {
-	
+	public GameBoardPanel(ArrayDeque<Player> players) {
+		this.players = players;
 		fields = new ArrayList<Field>(){{
         add(new Field("tree"));
 		add(new Field("tree"));	
