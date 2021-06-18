@@ -65,6 +65,7 @@ public class ResourcesCard extends JPanel {
 
 	public void setResourceNumber(int resourceNumber) {
 		this.resourceNumber = resourceNumber;
+		lblResource.setText("" + resourceNumber);
 	}
 
 }

@@ -3,6 +3,7 @@ package catan;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.HashMap;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,9 +17,17 @@ public class PlayerPanel extends JPanel{
 	ResourcesCard wheat = new ResourcesCard("wheat");
 	ResourcesCard rock = new ResourcesCard("rock");
 	
-	private Player player;
-	JLabel currentScore = new JLabel();
+	HashMap<String, ResourcesCard> resourcesCards = new HashMap<String, ResourcesCard>(){{
+		put("wool",wool);
+		put("tree",tree);
+		put("bricks", bricks);
+		put("rock", rock);
+		put("wheat", wheat);
+	}};
 	
+	JLabel currentScore = new JLabel();
+	protected int score = 0;
+
 	JButton buildVillage = new JButton("Build village");
 	JButton buildTown = new JButton("Build town");
 	JButton buildRoad = new JButton("Build road");
@@ -26,22 +35,14 @@ public class PlayerPanel extends JPanel{
 	
 	Font font = new Font("Calibri", Font.PLAIN, 17);
 	
-	public PlayerPanel(Player player, char allignment) {
-		this.setPlayer(player);
-		currentScore.setText("Current score: " + player.score);
+	public PlayerPanel(char allignment) {
+		currentScore.setText("Current score: " + score);
 		
 		if(allignment == '-') {
 			createHorizontalPanel();
 		}
 		else if(allignment == '|') {
 			createVerticalPanel();
-		}
-		
-	}
-
-	private void setPlayer(Player player) {
-		if(this.player == null) {
-			this.player = player;
 		}
 		
 	}
@@ -198,4 +199,12 @@ public class PlayerPanel extends JPanel{
         super.paintComponent(g);
         this.setBackground(Color.WHITE);
     }
+	
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
 }

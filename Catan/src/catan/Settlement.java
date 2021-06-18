@@ -16,4 +16,12 @@ public class Settlement {
 			player.score += 2;
 		}
 	}
+	public void addResources(String resource) {
+		if(type.equals("village")) {
+			player.addResources(resource, 1);
+		}
+		else if(type.equals("town")) {
+			player.addResources(resource, 2);
+		}
+	}
 }

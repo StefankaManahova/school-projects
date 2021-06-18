@@ -66,4 +66,12 @@ public class Field {
 		 midpointsOfEdges.add(EF);
 		 midpointsOfEdges.add(FA);
 	 }
+	 
+	 public void distributeResources() {
+		 if(!hasBandits) {
+			 for(Settlement settlement : settlements) {
+				 settlement.addResources(this.type);
+			 }
+		 }
+	 }
 }

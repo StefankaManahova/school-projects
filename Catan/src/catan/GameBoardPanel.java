@@ -42,14 +42,8 @@ public class GameBoardPanel extends JPanel {
 	
 	protected ArrayList<Field> fields;
 	protected ArrayList<Integer> numbers;
-	protected ArrayDeque<Player> players = new ArrayDeque<Player>() {{
-		new Player(Color.BLUE);
-		new Player(Color.BLUE);
-		new Player(Color.BLUE);
-		new Player(Color.BLUE);
-	}};
+	protected ArrayDeque<Player> players;
 	
-	protected int playerOnTurn = 3;
 	
 	protected double mouseClickRadiusRatio = 0.3   ;
 	protected boolean firstPaint = true;
@@ -66,6 +60,7 @@ public class GameBoardPanel extends JPanel {
 	
 	public GameBoardPanel(ArrayDeque<Player> players) {
 		this.players = players;
+		
 		fields = new ArrayList<Field>(){{
         add(new Field("tree"));
 		add(new Field("tree"));	

@@ -25,12 +25,5 @@ public class DiceControl extends JPanel{
 		
 		add(dicePanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
-		
-		roll.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dicePanel.roll();
-			}
-		});
 	}
 }

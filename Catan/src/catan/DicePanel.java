@@ -253,9 +253,10 @@ public class DicePanel extends JPanel {
 		g2d.fillOval(X6, Y6, diameter, diameter);
 	}
 	
-	protected void roll() {
+	protected int roll() {
 		dice1Result = (int)(Math.random() * 6) + 1;
 		dice2Result = (int)(Math.random() * 6) + 1;
 		repaint();
+		return dice1Result + dice2Result;
 	}
 }
