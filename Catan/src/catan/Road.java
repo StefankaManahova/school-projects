@@ -1,8 +1,8 @@
 package catan;
 
 public class Road {
-	protected double ratioX;
-	protected double ratioY;//from the beginning of the game board area, not the panel
+	protected double ratioY;
+	protected double ratioX;//from the beginning of the game board area, not the panel
 	protected int X;
 	protected int Y;
 	protected boolean free = true;

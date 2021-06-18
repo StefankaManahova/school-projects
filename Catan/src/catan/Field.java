@@ -12,16 +12,13 @@ public class Field {
 	protected Point center;
 	protected static int side;
 	
-	protected LinkedList<Point> points = new LinkedList<Point>();
-	protected LinkedList<Road> midpoints = new LinkedList<Road>();
+	protected LinkedList<Point> vertices = new LinkedList<Point>();
+	protected LinkedList<Road> midpointsOfEdges = new LinkedList<Road>();
 	
-	protected LinkedList<Piece> pieces = new LinkedList<Piece>();
+	protected LinkedList<Settlement> settlements = new LinkedList<Settlement>();
 	
 	Field(String type){
-		if(type.equals("tree") || type.equals("bricks") || type.equals("rock")
-				|| type.equals("wool") || type.equals("wheat") || type.equals("desert")){
-			this.type = type;
-		}
+		this(type,false);
 	}
 	
 	Field(String type, boolean hasBandits){
@@ -38,7 +35,7 @@ public class Field {
 	 }
 	 
 	 public void setCoordinates(int centerX, int centerY, int height, int BoardBeginningX) {
-		 points.clear();
+		 vertices.clear();
 		 center = new Point((double)(centerX - BoardBeginningX) / height, (double)(centerY) / height);
 		 
 		 Point A = new Point((double)(centerX - BoardBeginningX)/ height,(double)(centerY - side) / height, 'Z');
@@ -55,18 +52,18 @@ public class Field {
 		 Road EF = new Road((E.ratioX + F.ratioX) / 2, (E.ratioY + F.ratioY)/ 2, '|');
 		 Road FA = new Road((F.ratioX + A.ratioX) / 2, (F.ratioY + A.ratioY)/ 2, '/');
 		 
-		 points.add(A);
-		 points.add(B);
-		 points.add(C);
-		 points.add(D);
-		 points.add(E);
-		 points.add(F);
-		 
-		 midpoints.add(AB);
-		 midpoints.add(BC);
-		 midpoints.add(CD);
-		 midpoints.add(DE);
-		 midpoints.add(EF);
-		 midpoints.add(FA);
+		 vertices.add(A);
+		 vertices.add(B);
+		 vertices.add(C);
+		 vertices.add(D);
+		 vertices.add(E);
+		 vertices.add(F);
+		
+		 midpointsOfEdges.add(AB);
+		 midpointsOfEdges.add(BC);
+		 midpointsOfEdges.add(CD);
+		 midpointsOfEdges.add(DE);
+		 midpointsOfEdges.add(EF);
+		 midpointsOfEdges.add(FA);
 	 }
 }

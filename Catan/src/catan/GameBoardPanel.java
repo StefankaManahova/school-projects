@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,21 +36,18 @@ public class GameBoardPanel extends JPanel {
 	protected static Color desertColour = new Color(255, 153, 51);
 	
 	protected static Color banditsColour = new Color(51, 13, 0);
-	protected Color[] playerColours = new Color[4];
-	{
-		playerColours[0] = new Color(179, 0, 0);
-		playerColours[1] = new Color(0, 0, 153);
-		playerColours[2] = new Color(90, 0, 90);
-		playerColours[3] = new Color(77, 26, 0);
-	}
-
 	
 	protected int side;
 	protected int space;
 	
 	protected ArrayList<Field> fields;
 	protected ArrayList<Integer> numbers;
-	protected Player[] players = new Player[4];
+	protected ArrayDeque<Player> players = new ArrayDeque<Player>() {{
+		new Player(Color.BLUE);
+		new Player(Color.BLUE);
+		new Player(Color.BLUE);
+		new Player(Color.BLUE);
+	}};
 	
 	protected int playerOnTurn = 3;
 	
@@ -67,9 +65,7 @@ public class GameBoardPanel extends JPanel {
 	protected int stage = noActionStage;
 	
 	public GameBoardPanel() {
-		for(int i = 0; i < 4; i++) {
-			players[i] = new Player();
-		}
+	
 		fields = new ArrayList<Field>(){{
         add(new Field("tree"));
 		add(new Field("tree"));	
@@ -117,18 +113,7 @@ public class GameBoardPanel extends JPanel {
 				HashSet<Road> roadsToRemove = new HashSet<Road>();
 				Player player;
 				
-				if(playerOnTurn == 1) {
-					player = players[0];
-				} else if(playerOnTurn == 2) {
-					player = players[1];
-				} else if(playerOnTurn == 3) {
-					player = players[2];
-				} else if(playerOnTurn == 4) {
-					player = players[3];
-				}
-				else {
-					player = null;
-				}
+				player = players.peek();
 				
 				if(stage == putVillageStage) {
 					for(Point point : player.availablePoints) {
@@ -137,9 +122,11 @@ public class GameBoardPanel extends JPanel {
 							point.free = false;
 							
 							for(Field field : fields) {
-								for(Point p : field.points) {
+								for(Point p : field.vertices) {
 									if(distance(point,p) <= roundingUpMistake) {
-										field.pieces.add(new Piece(player, "village"));
+										Settlement village = new Settlement(player, "village");
+										field.settlements.add(village);
+										village.addPoints();
 									}
 								}
 							}
@@ -490,9 +477,11 @@ public class GameBoardPanel extends JPanel {
 							player.pointsWithTowns.add(point);
 							
 							for(Field field : fields) {
-								for(Point p : field.points) {
+								for(Point p : field.vertices) {
 									if(distance(point,p) <= roundingUpMistake) {
-										field.pieces.add(new Piece(player, "town"));
+										Settlement town = new Settlement(player, "town");
+										field.settlements.add(town);
+										town.addPoints();
 									}	
 								}
 							}
@@ -530,10 +519,10 @@ public class GameBoardPanel extends JPanel {
 			paint(upperLeftX, upperLeftY, g2d, fieldType);
 			if(firstPaint) {
 				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
-				for(Point point : fields.get(i).points) {
+				for(Point point : fields.get(i).vertices) {
 					allPoints.add(point);
 				}
-				for(Road midpoint : fields.get(i).midpoints) {
+				for(Road midpoint : fields.get(i).midpointsOfEdges) {
 					allRoads.add(midpoint);
 				}
 			}
@@ -547,10 +536,10 @@ public class GameBoardPanel extends JPanel {
 			paint(upperLeftX, upperLeftY, g2d, fieldType);
 			if(firstPaint) {
 				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
-				for(Point point : fields.get(i).points) {
+				for(Point point : fields.get(i).vertices) {
 					allPoints.add(point);
 				}
-				for(Road midpoint : fields.get(i).midpoints) {
+				for(Road midpoint : fields.get(i).midpointsOfEdges) {
 					allRoads.add(midpoint);
 				}
 			}
@@ -563,10 +552,10 @@ public class GameBoardPanel extends JPanel {
 			paint(upperLeftX, upperLeftY, g2d, fieldType);
 			if(firstPaint) {
 				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
-				for(Point point : fields.get(i).points) {
+				for(Point point : fields.get(i).vertices) {
 					allPoints.add(point);
 				}
-				for(Road midpoint : fields.get(i).midpoints) {
+				for(Road midpoint : fields.get(i).midpointsOfEdges) {
 					allRoads.add(midpoint);
 				}
 			}
@@ -579,10 +568,10 @@ public class GameBoardPanel extends JPanel {
 			paint(upperLeftX, upperLeftY, g2d, fieldType);
 			if(firstPaint) {
 				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
-				for(Point point : fields.get(i).points) {
+				for(Point point : fields.get(i).vertices) {
 					allPoints.add(point);
 				}
-				for(Road midpoint : fields.get(i).midpoints) {
+				for(Road midpoint : fields.get(i).midpointsOfEdges) {
 					allRoads.add(midpoint);
 				}
 			}
@@ -595,10 +584,10 @@ public class GameBoardPanel extends JPanel {
 			paint(upperLeftX, upperLeftY, g2d, fieldType);
 			if(firstPaint) {
 				fields.get(i).setCoordinates((int)(upperLeftX + Math.sqrt(3) * side / 2), upperLeftY + side, this.getHeight(), leftRightMargins) ;
-				for(Point point : fields.get(i).points) {
+				for(Point point : fields.get(i).vertices) {
 					allPoints.add(point);
 				}
-				for(Road midpoint : fields.get(i).midpoints) {
+				for(Road midpoint : fields.get(i).midpointsOfEdges) {
 					allRoads.add(midpoint);
 				}
 			}
@@ -689,21 +678,21 @@ public class GameBoardPanel extends JPanel {
 		}
 		
 		if(firstPaint) {
-			for(int i = 0; i < 4; i++) {
-				players[i].availablePoints.addAll(allPoints);
+			for(Player player : players) {
+				player.availablePoints.addAll(allPoints);
 			}
 		}
-		for(int i = 0; i < 4; i++) {
-			for(Road road :  players[i].occupiedRoads) {
-				g2d.setColor(playerColours[i]);
+		for(Player player : players) {
+			for(Road road :  player.occupiedRoads) {
+				g2d.setColor(player.colour);
 				paintRoad(g2d, road);
 			}
-			for(Point point :  players[i].pointsWithVillages) {
-				g2d.setColor(playerColours[i]);
+			for(Point point :  player.pointsWithVillages) {
+				g2d.setColor(player.colour);
 				paintVillage(g2d, point);
 			}
-			for(Point point :  players[i].pointsWithTowns) {
-				g2d.setColor(playerColours[i]);
+			for(Point point :  player.pointsWithTowns) {
+				g2d.setColor(player.colour);
 				paintTown(g2d, point);
 			}
 		}

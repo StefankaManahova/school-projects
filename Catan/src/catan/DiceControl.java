@@ -13,7 +13,7 @@ public class DiceControl extends JPanel{
 	protected DicePanel dicePanel = new DicePanel();
 	protected JButton roll = new JButton("Roll");
 	
-	protected Font font = new Font("Calibri", Font.PLAIN, 20);
+	protected Font font = new Font("Calibri", Font.PLAIN, 17);
 	
 	public DiceControl() {
 		setLayout(new BorderLayout());
