@@ -36,6 +36,7 @@ public class GameBoardPanel extends JPanel {
 	protected static Color desertColour = new Color(255, 153, 51);
 	
 	protected static Color banditsColour = new Color(51, 13, 0);
+	protected Field currentFieldWithBandits;
 	
 	protected int side;
 	protected int space;
@@ -45,7 +46,7 @@ public class GameBoardPanel extends JPanel {
 	protected ArrayDeque<Player> players;
 	
 	
-	protected double mouseClickRadiusRatio = 0.3   ;
+	protected double mouseClickRadiusRatio = 0.3;
 	protected boolean firstPaint = true;
 	
 	protected HashSet<Point> allPoints = new HashSet<Point>();
@@ -55,10 +56,14 @@ public class GameBoardPanel extends JPanel {
 	protected final static int putRoadStage = 1;
 	protected final static int putVillageStage = 2;
 	protected final static int putTownStage = 3;
+	protected final static int moveBanditsStage = 4;
 	
-	protected int stage = noActionStage;
+	protected int stage;
 	
+	protected static Font boldFont = new Font("Calibri", Font.BOLD, 17);
+
 	public GameBoardPanel(ArrayDeque<Player> players) {
+		this.stage = noActionStage;
 		this.players = players;
 		
 		fields = new ArrayList<Field>(){{
@@ -106,34 +111,42 @@ public class GameBoardPanel extends JPanel {
 				HashSet<Point> pointsToAdd = new HashSet<Point>();
 				HashSet<Road> roadsToAdd = new HashSet<Road>();
 				HashSet<Road> roadsToRemove = new HashSet<Road>();
-				Player player;
-				
-				player = players.peek();
+				Player player =  players.peek();
 				
 				if(stage == putVillageStage) {
 					for(Point point : player.availablePoints) {
 						if(distance(point.X, point.Y, e.getX(), e.getY()) < mouseClickRadius && point.free) {
 							player.pointsWithVillages.add(point);
 							point.free = false;
+							Settlement village = new Settlement(player, "village");
+							village.addPoints();
+							player.updateScoreLabel();
 							
 							for(Field field : fields) {
 								for(Point p : field.vertices) {
 									if(distance(point,p) <= roundingUpMistake) {
-										Settlement village = new Settlement(player, "village");
 										field.settlements.add(village);
-										village.addPoints();
+										if(player.availablePoints.size() == allPoints.size() - 1) {
+											village.addResources(field.type);
+											player.updateResourcesLabels();
+										}
 									}
 								}
 							}
 							
-							if(player.availablePoints.contains(allPoints)) {
+							if(player.availablePoints.containsAll(allPoints)) {
 								pointsToRemove.add(point);
+								stage = putRoadStage;
+								player.setStage(Player.putFirstRoadStage);;
 							}
 							else if(player.availablePoints.size() == allPoints.size() - 1) {
 								pointsToRemove.addAll(player.availablePoints);
+								stage = putRoadStage;
+								player.setStage(Player.putSecondRoadStage);
 							}
 							else {
 								pointsToRemove.add(point);
+								stage = noActionStage;
 							}
 							
 							if(point.type == 'Y') {
@@ -223,6 +236,9 @@ public class GameBoardPanel extends JPanel {
 									}
 								}
 							}
+							if(player.getStage() == Player.normalGameMoveStage) {
+								player.setChoosingPlacesForBuilding(false);
+							}
 							break;
 						}
 					}
@@ -242,6 +258,7 @@ public class GameBoardPanel extends JPanel {
 				else if(stage == putRoadStage) {
 					for(Road road : player.availableRoads) {
 						if(distance(road.X, road.Y, e.getX(), e.getY()) < mouseClickRadius && road.free) {
+							stage = noActionStage;
 							player.occupiedRoads.add(road);
 							road.free = false;
 							roadsToRemove.add(road);
@@ -451,7 +468,37 @@ public class GameBoardPanel extends JPanel {
 									roadsToAdd.add(r);
 								}
 							}
+							if(player.getStage() == Player.normalGameMoveStage) {
+								player.setChoosingPlacesForBuilding(false);
+							}
 							
+							//setting the new stages for the players and making the next player on turn
+							if(player.getStage() == Player.putFirstRoadStage){
+								player.setStage(Player.putSecondVillageStage);
+								players.poll();
+								players.offer(player);
+								Player nextPlayer = players.peek();
+								nextPlayer.panel.buildVillage.setFont(boldFont);
+								player.panel.buildVillage.setFont(PlayerPanel.font);
+							}
+							else if(player.getStage() == Player.putSecondRoadStage) {
+								player.setStage(Player.normalGameMoveStage);
+								Color player4Colour = new Color(77, 26, 0);
+								players.poll();
+								players.offer(player);
+								if(player.colour.equals(player4Colour)) {
+									Player nextPlayer = players.peek();
+									nextPlayer.setStage(Player.rollDiceStage);
+									player.panel.buildVillage.setFont(PlayerPanel.font);
+								}
+								else {
+									Player nextPlayer = players.peek();
+									nextPlayer.panel.buildVillage.setFont(boldFont);
+									player.panel.buildVillage.setFont(PlayerPanel.font);
+								}
+							}
+							stage = noActionStage;
+							break;
 						}
 					}
 					player.availableRoads.removeAll(roadsToRemove);
@@ -462,12 +509,14 @@ public class GameBoardPanel extends JPanel {
 					roadsToRemove.clear();
 					roadsToAdd.clear();
 					pointsToRemove.clear();
-					pointsToAdd.clear();
+					pointsToAdd.clear();		
+
 				}
 				
 				else if(stage == putTownStage) {
 					for(Point point : player.pointsWithVillages) {
 						if(distance(point.X, point.Y, e.getX(), e.getY()) < mouseClickRadius) {
+							stage = noActionStage;
 							player.pointsWithVillages.remove(point);
 							player.pointsWithTowns.add(point);
 							
@@ -477,9 +526,24 @@ public class GameBoardPanel extends JPanel {
 										Settlement town = new Settlement(player, "town");
 										field.settlements.add(town);
 										town.addPoints();
+										player.updateScoreLabel();
 									}	
 								}
 							}
+							if(player.getStage() == Player.normalGameMoveStage) {
+								player.setChoosingPlacesForBuilding(false);
+							}
+							break;
+						}
+					}
+				}
+				else if(stage == moveBanditsStage) {
+					double moveBanditsMouseclickRatioToSide = 0.7;
+					int moveBanditsMouseclick = (int)(moveBanditsMouseclickRatioToSide * side);
+					for(Field field : fields) {
+						if(distance(field.center.X, field.center.Y,e.getX(), e.getY()) <= moveBanditsMouseclick && !field.hasBandits) {
+							moveBandits(currentFieldWithBandits, field);
+							stage = noActionStage;
 							break;
 						}
 					}
@@ -604,14 +668,20 @@ public class GameBoardPanel extends JPanel {
 			g.setColor(Color.BLACK);
 			
 			field.center.setPanelSize(this.getHeight(), leftRightMargins);
-			if(!field.type.equals("desert") && !field.hasBandits) {
+			if(!field.hasBandits && !field.type.equals("desert")) {
 				g2d.drawString(numbers.get(f).toString(), field.center.X - 2 * space, field.center.Y + space / 2);
 				if(firstPaint) {
 					field.number = numbers.get(f);
 				}
 				f++;
 			}
-			else if(field.hasBandits) {
+			else if(field.hasBandits && !field.type.equals("desert")) {
+				currentFieldWithBandits = field;
+				paintBandits(g2d, field.center.X, field.center.Y);
+				f++;
+			}
+			else if(field.hasBandits && field.type.equals("desert")){
+				currentFieldWithBandits = field;
 				paintBandits(g2d, field.center.X, field.center.Y);
 			}
 		}
@@ -877,5 +947,31 @@ public class GameBoardPanel extends JPanel {
 	public void moveBandits(Field fromField, Field toField) {
 		fromField.hasBandits = false;
 		toField.hasBandits = true;
+	}
+	
+	public int getStage() {
+		return stage;
+	}
+	
+	public void setStage(int stage) {
+		this.stage = stage;
+	}
+	
+	public boolean freePointsAvailable(Player player) {
+		for(Point point : player.availablePoints) {
+			if(point.free) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean freeRoadsAvailable(Player player) {
+		for(Road road : player.availableRoads) {
+			if(road.free) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -33,7 +33,8 @@ public class PlayerPanel extends JPanel{
 	JButton buildRoad = new JButton("Build road");
 	JButton readyWithMove = new JButton("Ready");
 	
-	Font font = new Font("Calibri", Font.PLAIN, 17);
+	static Font font = new Font("Calibri", Font.PLAIN, 17);
+	static Font boldFont= new Font("Calibri", Font.BOLD, 17);
 	
 	public PlayerPanel(char allignment) {
 		currentScore.setText("Current score: " + score);
@@ -52,7 +53,7 @@ public class PlayerPanel extends JPanel{
 		JPanel pnlCurrentScore = new JPanel();
 		pnlCurrentScore.setBackground(Color.WHITE);
 		pnlCurrentScore.add(currentScore);
-		currentScore.setFont(font);
+		currentScore.setFont(boldFont);
 		JPanel pnlMain = new JPanel();
 		add(pnlCurrentScore);
 		add(pnlMain);
@@ -128,7 +129,7 @@ public class PlayerPanel extends JPanel{
 		JPanel pnlCurrentScore = new JPanel();
 		pnlCurrentScore.setBackground(Color.WHITE);
 		pnlCurrentScore.add(currentScore);
-		currentScore.setFont(font);
+		currentScore.setFont(boldFont);
 		
 		JPanel p1 = new JPanel();
 		JPanel p2 = new JPanel();

@@ -14,7 +14,16 @@ public class Player {
 	
 	protected int score;
 	protected PlayerPanel panel;
-
+	
+	protected int stage;
+	protected static int putFirstVillageStage = 1;
+	protected static int putFirstRoadStage = 2;
+	protected static int putSecondVillageStage = 3;
+	protected static int putSecondRoadStage = 4;
+	protected static int normalGameMoveStage = 5;
+	protected static int rollDiceStage = 6;
+	
+	protected boolean choosingPlacesForBuilding;
 
 	protected HashMap<String, Integer> resources = new HashMap<String, Integer>(){{
 		put("tree", Integer.valueOf(0));
@@ -30,6 +39,7 @@ public class Player {
 	public Player(Color colour, PlayerPanel panel) {
 		this.setColour(colour);
 		this.setPanel(panel);
+		stage = putFirstVillageStage;
 	}
 
 	public Color getColour() {
@@ -56,4 +66,35 @@ public class Player {
 	public void setPanel(PlayerPanel panel) {
 		this.panel = panel;
 	}
+	
+
+	public void setStage(int stage) {
+		if(stage >= 1 && stage <= 6) {
+			this.stage = stage;
+		}
+	}
+
+	public int getStage() {
+		return stage;
+	}
+
+	public void updateResourcesLabels() {
+		for(String resource : resources.keySet()) {
+			int newNumberOfResources = resources.get(resource);
+			ResourcesCard card = panel.resourcesCards.get(resource);
+			card.setResourceNumber(newNumberOfResources);
+		}
+		
+	}
+	public void updateScoreLabel() {
+		panel.currentScore.setText("Current score: " + score);
+	}
+	
+	public boolean isChoosingPlacesForBuilding() {
+		return choosingPlacesForBuilding;
+	}
+	public void setChoosingPlacesForBuilding(boolean choosingPlacesForBuilding) {
+		this.choosingPlacesForBuilding = choosingPlacesForBuilding;
+	}
+
 }
