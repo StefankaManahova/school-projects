@@ -519,14 +519,14 @@ public class GameBoardPanel extends JPanel {
 							stage = noActionStage;
 							player.pointsWithVillages.remove(point);
 							player.pointsWithTowns.add(point);
+							Settlement town = new Settlement(player, "town");
+							town.addPoints();
+							player.updateScoreLabel();
 							
 							for(Field field : fields) {
 								for(Point p : field.vertices) {
 									if(distance(point,p) <= roundingUpMistake) {
-										Settlement town = new Settlement(player, "town");
 										field.settlements.add(town);
-										town.addPoints();
-										player.updateScoreLabel();
 									}	
 								}
 							}
@@ -973,5 +973,8 @@ public class GameBoardPanel extends JPanel {
 			}
 		}
 		return false;
+	}
+	public boolean availableVillagesToExpandIntoTowns(Player player) {
+		return !player.pointsWithVillages.isEmpty();
 	}
 }

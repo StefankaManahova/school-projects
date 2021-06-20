@@ -41,7 +41,7 @@ public class CatanPanel extends JPanel{
 	GameBoardPanel gameBoard = new GameBoardPanel(players);
 	
 	DiceControl dice = new DiceControl();
-	DiceControl dice2 = new DiceControl();
+	ExchangePanel exchange = new ExchangePanel();
 	
 	JButton buildingInfo = new JButton("Building info");
 	
@@ -64,8 +64,8 @@ public class CatanPanel extends JPanel{
 		leftPanel.setPreferredSize(new Dimension(200, 590));
 		
 		leftPanel.add(pnl4, BorderLayout.CENTER);
-		dice2.setPreferredSize(new Dimension(200, 140));
-		leftPanel.add(dice2, BorderLayout.NORTH);
+		exchange.setPreferredSize(new Dimension(200, 140));
+		leftPanel.add(exchange, BorderLayout.NORTH);
 		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BorderLayout());
@@ -105,6 +105,15 @@ public class CatanPanel extends JPanel{
 				JLabel lblInfo = new JLabel("<html>" + infoRoad.replaceAll("\n", "<br/>") + "</html>");
 				lblInfo.setFont(PlayerPanel.font);
 				JOptionPane.showMessageDialog(null,lblInfo, "Necessary resources for building", JOptionPane.INFORMATION_MESSAGE);		
+			}
+		});
+		
+		exchange.btnExchange.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Player player = players.peek();
+				if(player.getStage() == Player.normalGameMoveStage && gameBoard.stage != GameBoardPanel.moveBanditsStage && !hasWinner && player.isChoosingPlacesForBuilding() == false)
+				exchange.exchange3for1(players.peek());		
 			}
 		});
 		
@@ -207,22 +216,38 @@ public class CatanPanel extends JPanel{
 				}
 			});
 			
+			player.panel.buildTown.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if(player.equals(players.peek()) && player.getStage() == Player.normalGameMoveStage && gameBoard.stage != GameBoardPanel.moveBanditsStage && !hasWinner && player.isChoosingPlacesForBuilding() == false){
+						if(player.resources.get("wheat") >= 2 && player.resources.get("rock") >= 3) {
+							if(!gameBoard.availableVillagesToExpandIntoTowns(player)) {
+								JLabel lblNoAvailableVillages = new JLabel("Sorry, there aren't any available villages for you to expand into towns. Maybe next time! :)");
+								lblNoAvailableVillages.setFont(PlayerPanel.font);
+								JOptionPane.showMessageDialog(null,lblNoAvailableVillages, "No available villages",JOptionPane.INFORMATION_MESSAGE);
+							} else {
+								player.resources.put("wheat", player.resources.get("wheat") - 2);
+								player.resources.put("rock", player.resources.get("rock") - 3);
+								player.updateResourcesLabels();
+								player.setChoosingPlacesForBuilding(true);
+								
+								gameBoard.setStage(GameBoardPanel.putTownStage);
+							}
+						}
+						else {
+							JLabel lblNotEnoughResources = new JLabel("Sorry, you don't have enough resources to build a town. Maybe next time! :)");
+							lblNotEnoughResources.setFont(PlayerPanel.font);
+							JOptionPane.showMessageDialog(null,lblNotEnoughResources, "Not enough resources",JOptionPane.INFORMATION_MESSAGE);
+						}
+					}
+				}
+			});
+			
+			
 			player.panel.readyWithMove.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if(players.peek() == player && player.getStage() == Player.normalGameMoveStage && gameBoard.stage != GameBoardPanel.moveBanditsStage && !hasWinner && player.isChoosingPlacesForBuilding() == false) {
-						players.poll();
-						players.offer(player);
-						Player nextPlayer = players.peek();
-						nextPlayer.setStage(Player.rollDiceStage);
-						
-						player.panel.buildRoad.setFont(PlayerPanel.font);
-						player.panel.buildVillage.setFont(PlayerPanel.font);
-						player.panel.buildTown.setFont(PlayerPanel.font);
-						player.panel.readyWithMove.setFont(PlayerPanel.font);
-						
-						dice.roll.setFont(boldFont);
-						
 						if(player.score >= winningScore) {
 							hasWinner = true;
 							String winner = "";
@@ -241,6 +266,19 @@ public class CatanPanel extends JPanel{
 							JLabel lblWinner = new JLabel("Congratulations!" + winner + "is the winner!");
 							lblWinner.setFont(PlayerPanel.font);
 							JOptionPane.showMessageDialog(null, lblWinner, "The end",JOptionPane.INFORMATION_MESSAGE);
+						}
+						else {
+							players.poll();
+							players.offer(player);
+							Player nextPlayer = players.peek();
+							nextPlayer.setStage(Player.rollDiceStage);
+							
+							player.panel.buildRoad.setFont(PlayerPanel.font);
+							player.panel.buildVillage.setFont(PlayerPanel.font);
+							player.panel.buildTown.setFont(PlayerPanel.font);
+							player.panel.readyWithMove.setFont(PlayerPanel.font);
+							
+							dice.roll.setFont(boldFont);
 						}
 					 }
 				}

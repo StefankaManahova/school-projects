@@ -13,7 +13,7 @@ public class Settlement {
 			player.score++;
 		}
 		else if(type.equals("town")) {
-			player.score += 2;
+			player.score ++;//we build the town over an existing village so the score increases by 1 point in total
 		}
 	}
 	public void addResources(String resource) {
