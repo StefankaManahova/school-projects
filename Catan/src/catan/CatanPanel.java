@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
+//this is the main panel that contains all the components
 public class CatanPanel extends JPanel{
 	Color player1Colour = new Color(179, 0, 0);
 	Color player2Colour = new Color(0, 0, 153);
@@ -27,17 +27,20 @@ public class CatanPanel extends JPanel{
 	PlayerPanel pnl3 = new PlayerPanel('-');
 	PlayerPanel pnl4 = new PlayerPanel('|');
 	
+	//each player has a reference to its panel that is given in the constructor
 	Player player1 = new Player(player1Colour, pnl1);
 	Player player2 = new Player(player2Colour, pnl2);
 	Player player3 = new Player(player3Colour, pnl3);
 	Player player4 = new Player(player4Colour, pnl4);
 	
+	//creating a queue for the players so we can keep track of who is on turn
 	ArrayDeque<Player> players = new ArrayDeque<Player>(){{
 		offer(player1);
 		offer(player2);
 		offer(player3);
 		offer(player4);
 	}};
+	//creating a panel containing the game board
 	GameBoardPanel gameBoard = new GameBoardPanel(players);
 	
 	DiceControl dice = new DiceControl();
@@ -46,10 +49,13 @@ public class CatanPanel extends JPanel{
 	JButton buildingInfo = new JButton("Building info");
 	
 	static int winningScore = 10;
+	
+	//indicating whether there is a winner already or not
 	boolean hasWinner = false;
 	Font boldFont = new Font("Calibri", Font.BOLD, 17);
 	
 	public CatanPanel() {
+		//creating the desired layout
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
 		
@@ -73,7 +79,6 @@ public class CatanPanel extends JPanel{
 		rightPanel.setPreferredSize(new Dimension(200, 590));
 		 
 		JPanel pnlInfo = new JPanel();
-		//pnlInfo.setLayout(new BoxLayout(pnlInfo, BoxLayout.X_AXIS));
 		pnlInfo.add(buildingInfo);
 		buildingInfo.setFont(PlayerPanel.font);
 		pnlInfo.setBackground(Color.WHITE);
@@ -113,7 +118,13 @@ public class CatanPanel extends JPanel{
 			public void actionPerformed(ActionEvent arg0) {
 				Player player = players.peek();
 				if(player.getStage() == Player.normalGameMoveStage && gameBoard.stage != GameBoardPanel.moveBanditsStage && !hasWinner && player.isChoosingPlacesForBuilding() == false)
-				exchange.exchange3for1(players.peek());		
+					try {
+						exchange.exchange3for1(players.peek());
+					} catch (InvalidExchangeException e) {
+						JLabel lblInvalidExchange = new JLabel(e.toString());
+						lblInvalidExchange.setFont(PlayerPanel.font);
+						JOptionPane.showMessageDialog(null,lblInvalidExchange, "Invalid exchange", JOptionPane.ERROR_MESSAGE);
+					}		
 			}
 		});
 		
@@ -263,7 +274,7 @@ public class CatanPanel extends JPanel{
 							if(player == player4) {
 								winner = "Player 4 (brown) ";
 							}
-							JLabel lblWinner = new JLabel("Congratulations!" + winner + "is the winner!");
+							JLabel lblWinner = new JLabel("Congratulations! " + winner + "is the winner!");
 							lblWinner.setFont(PlayerPanel.font);
 							JOptionPane.showMessageDialog(null, lblWinner, "The end",JOptionPane.INFORMATION_MESSAGE);
 						}

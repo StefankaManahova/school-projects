@@ -70,17 +70,20 @@ public class ExchangePanel extends JPanel {
 		add(pnlButton);
 	}
 	
-	public void exchange3for1(Player player) {
+	public void exchange3for1(Player player) throws InvalidExchangeException{
 		String givenResource =(String) givenResources.getSelectedItem();
 		String receivedResource =(String) receivedResources.getSelectedItem();
-		
-		if(player.resources.containsKey(givenResource) && player.resources.containsKey(receivedResource)) {
-			
-			if(player.resources.get(givenResource) >= 3) {
-				player.resources.put(givenResource, player.resources.get(givenResource) - 3);
-				player.resources.put(receivedResource, player.resources.get(receivedResource) + 1);
-				player.updateResourcesLabels();
+		if(!givenResource.equals(receivedResource)) {
+			if(player.resources.containsKey(givenResource) && player.resources.containsKey(receivedResource)) {
+				
+				if(player.resources.get(givenResource) >= 3) {
+					player.resources.put(givenResource, player.resources.get(givenResource) - 3);
+					player.resources.put(receivedResource, player.resources.get(receivedResource) + 1);
+					player.updateResourcesLabels();
+				}
 			}
+		} else {
+			throw  new InvalidExchangeException();
 		}
 	}
 }
