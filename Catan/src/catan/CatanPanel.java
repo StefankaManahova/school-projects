@@ -101,7 +101,7 @@ public class CatanPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String infoRoad = "Necessary resources:\nRoad: 1 x wood & 1 x bricks" + "\nVillage: 1 x wood & 1 x bricks & 1 x wheat & 1 x wool"
-						+ "\nTown: 2 x wheat && 3 x rock";
+						+ "\nTown: 2 x wheat & 3 x rock";
 				JLabel lblInfo = new JLabel("<html>" + infoRoad.replaceAll("\n", "<br/>") + "</html>");
 				lblInfo.setFont(PlayerPanel.font);
 				JOptionPane.showMessageDialog(null,lblInfo, "Necessary resources for building", JOptionPane.INFORMATION_MESSAGE);		
