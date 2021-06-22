@@ -23,6 +23,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/* this is the panel that regulates the painting of the board and the building 
+ * of roads, villages and towns
+ */
 
 public class GameBoardPanel extends JPanel {
 	protected static double spaceRatio = 0.01;
@@ -102,30 +105,45 @@ public class GameBoardPanel extends JPanel {
 
 		Collections.shuffle(fields);
 
+		/*adding functionality to each mouseclick, because that is the way 
+		the players indicate where they want to build*/
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				int mouseClickRadius = (int)(mouseClickRadiusRatio * side);
 				int roundingUpMistake = space * 3 / 2;
+				
+				/*creating HashSets with points to add and points to remove,
+				so that we don't change the lists while they are being iterated*/
 				HashSet<Point> pointsToRemove = new HashSet<Point>();
 				HashSet<Point> pointsToAdd = new HashSet<Point>();
 				HashSet<Road> roadsToAdd = new HashSet<Road>();
 				HashSet<Road> roadsToRemove = new HashSet<Road>();
 				Player player =  players.peek();
 				
+				//specifying the rules of building a village
 				if(stage == putVillageStage) {
+					
+					/*for each point currently available for the player
+					 *  we check if it's free and within the allowed 
+					mouse click radius*/	
 					for(Point point : player.availablePoints) {
 						if(distance(point.X, point.Y, e.getX(), e.getY()) < mouseClickRadius && point.free) {
 							player.pointsWithVillages.add(point);
-							point.free = false;
+							point.free = false;//the point is no longer free
+							
+							//creating a new village and updating the score
 							Settlement village = new Settlement(player, "village");
 							village.addPoints();
 							player.updateScoreLabel();
 							
+							//finding the fields around the village
 							for(Field field : fields) {
 								for(Point p : field.vertices) {
 									if(distance(point,p) <= roundingUpMistake) {
 										field.settlements.add(village);
+										/*if this is the second village of the player,
+										some resources must be distributed*/
 										if(player.availablePoints.size() == allPoints.size() - 1) {
 											village.addResources(field.type);
 											player.updateResourcesLabels();
@@ -134,22 +152,31 @@ public class GameBoardPanel extends JPanel {
 								}
 							}
 							
+							//in case this is the first village
 							if(player.availablePoints.containsAll(allPoints)) {
 								pointsToRemove.add(point);
 								stage = putRoadStage;
 								player.setStage(Player.putFirstRoadStage);;
 							}
+							//in case this is the second village
 							else if(player.availablePoints.size() == allPoints.size() - 1) {
 								pointsToRemove.addAll(player.availablePoints);
 								stage = putRoadStage;
 								player.setStage(Player.putSecondRoadStage);
 							}
+							//in case it's a normal move
 							else {
 								pointsToRemove.add(point);
 								stage = noActionStage;
 							}
-							
+							/*When we build a village on a certain point, we need to mark
+							 * the roads coming from it as available, and the three points next to it as 
+							 * unavailable (not free for anyone). There are two types of points - ones with roads
+							 * looking like 'Y', and others upside down (we'll call them Z)
+							 */
 							if(point.type == 'Y') {
+								
+								//specifying the coordinates of the available 3 roads
 								int road1X = (int)(point.X + Math.sqrt(3) / 4 * side + space / 4);
 								int road1Y = point.Y - side / 4;
 								int road2X = (int)(point.X - Math.sqrt(3) / 4 * side + space / 4);
@@ -157,14 +184,17 @@ public class GameBoardPanel extends JPanel {
 								int road3X = point.X;
 								int road3Y = point.Y + side / 2 + space / 2;
 								
-								
+								//specifying the coordinates of the unavailable 3 points
 								int point1X = (int)(point.X + Math.sqrt(3) / 2 * side + space / 2);
 								int point1Y = point.Y - side / 2;
 								int point2X = (int)(point.X - Math.sqrt(3) / 2 * side + space / 2);
 								int point2Y = point.Y - side / 2;
 								int point3X = point.X;
 								int point3Y = point.Y + side + space;
-								  
+								
+								/*marking all roads coming from the village as 'first', 
+								 * so we can't build a new village right after them
+								 */
 								for(Road r : allRoads) {
 									if(distance(r.X, r.Y, road1X, road1Y) <= roundingUpMistake && r.free) {
 										r.isFirst = true;
@@ -180,6 +210,7 @@ public class GameBoardPanel extends JPanel {
 									}
 								}
 								
+								//doing the same for the points
 								for(Point p : allPoints) {
 									if(distance(p.X, p.Y, point1X, point1Y) <= roundingUpMistake) {
 										p.free = false;
@@ -192,6 +223,8 @@ public class GameBoardPanel extends JPanel {
 									}
 								}
 							}
+							
+							//doing the same things with the other points (upside down Y)
 							else if(point.type == 'Z') {
 								int road1X = (int)(point.X + Math.sqrt(3) / 4 * side + space / 4);
 								int road1Y = point.Y + side / 4;
@@ -243,11 +276,15 @@ public class GameBoardPanel extends JPanel {
 						}
 					}
 					
+					/*finally, we remove all necessary roads and points from the available
+					 * and also add the new available roads
+					*/
 					player.availableRoads.removeAll(roadsToRemove);
 					player.availableRoads.addAll(roadsToAdd);
 					
 					player.availablePoints.removeAll(pointsToRemove);
 					
+					//we clear the sets with points and roads
 					pointsToAdd.clear();
 					pointsToRemove.clear();
 					
@@ -255,7 +292,9 @@ public class GameBoardPanel extends JPanel {
 					roadsToRemove.clear();
 				} 
 				
+				//specifying the rules of building a road
 				else if(stage == putRoadStage) {
+					//checking if the player has clicked on an available road
 					for(Road road : player.availableRoads) {
 						if(distance(road.X, road.Y, e.getX(), e.getY()) < mouseClickRadius && road.free) {
 							stage = noActionStage;
@@ -265,7 +304,12 @@ public class GameBoardPanel extends JPanel {
 							
 							int road1X = 0, road1Y = 0, road2X = 0, road2Y = 0, road3X = 0, road3Y = 0, road4X = 0, road4Y = 0;
 							
+							/* For the roads we have 3 options - they can look like '/', like
+							 * '\' and like '|'. We calculate the coordinate sof the available roads
+							 * and points for each case individually.
+							 */
 							if(road.slope == '\\') {
+								//we calculate the coordinates of the 4 roads crossing the chosen one
 								road1X = (int)(road.X + Math.sqrt(3) / 2 * side + space / 2);
 								road1Y = road.Y;
 								
